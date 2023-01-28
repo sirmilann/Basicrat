@@ -7,6 +7,7 @@ os.system("cls")
 # Globals
 IP = "127.0.0.1"
 PORT = 8888
+DATA = 16384
 
 print(Fore.RED+"""
    ▄▄▄▄▄   ▄███▄   █▄▄▄▄    ▄   ▄███▄   █▄▄▄▄ 
@@ -35,7 +36,7 @@ while True:
             break
         if len(cmd) > 0:
             client.send(cmd.encode())
-            client_response = str(client.recv(4096),"utf-8")
+            client_response = str(client.recv(DATA),"utf-8")
             print(client_response, end="")
     except Exception as e:
         print("Error running command: ",e)

