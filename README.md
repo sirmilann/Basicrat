@@ -41,6 +41,3 @@ If You Notice Any Errors, Feel Free To Open An New Issue.
 • dir
 
 • exit
-
-# Server
-![Capture](https://user-images.githubusercontent.com/94076644/215332537-1a4641d6-e3c5-43ef-b143-31578f0a0e91.PNG)
