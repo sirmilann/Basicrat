@@ -8,6 +8,22 @@ If You Notice Any Errors, Feel Free To Open An New Issue.
 
 • Mine
 
+• shutdown
+
+• logoff
+
+• restart
+
+• fileflood
+
+• folderflood
+
+• displayon
+
+• netinfo
+
+• getos
+
 • volup
 
 • voldown
